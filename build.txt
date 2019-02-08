@@ -1,0 +1,6 @@
+
+Build with
+;; clojure -m cljs.main -co compile_opts.edn -c
+
+Develop with
+;; clojure -m cljs.main -co repl_compile_opts.edn -ro '{:launch-browser false}' -c -r

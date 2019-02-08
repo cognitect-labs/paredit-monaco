@@ -1,0 +1,11 @@
+{:main cognitect.monaco.paredit
+; :preloads [rebl.browser] ;; using this interferes with cljs.main!
+
+ :output-to "resources/cognitect/rebl/reblcljs.js"
+ :output-dir "resources/cognitect/rebl/cljsout"
+
+ :asset-path "/resources/cognitect/rebl/cljsout"
+
+ :optimizations :none
+ :cache-analysis true
+ :source-map true}

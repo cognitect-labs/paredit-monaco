@@ -125,7 +125,7 @@
    #js {:id "paredit-kill-sexp"
         :label "Kill S-Expression"
         :keybindings #js [(bit-or js/monaco.KeyMod.WinCtrl
-                                  js/monaco.KeyCode.KEY_D)]
+                                  js/monaco.KeyCode.KEY_K)]
         :run (wrap-paredit-command
               (fn [{:keys [editor ast src selection]}]
                 (apply-edits editor (.killSexp js/paredit.editor ast src (:cur selection) #js {:backward false}))))}

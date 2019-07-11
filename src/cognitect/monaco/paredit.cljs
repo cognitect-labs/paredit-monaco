@@ -180,6 +180,29 @@
                                   js/monaco.KeyCode.UpArrow)]
         :run (nav-thunk js/paredit.navigator.backwardUpSexp)}
 
+   #js {:id "paredit-open-round"
+        :label "Open Round Paren"
+        :keybindings #js [(bit-or js/monaco.KeyMod.Shift
+                                  js/monaco.KeyCode.KEY_9)]
+        :run (wrap-paredit-command
+               (fn [{:keys [editor ast src selection]}]
+                 (apply-edits editor (.openList js/paredit.editor ast src (:cur selection) #js {:open "(", :close ")"}))))}
+
+   #js {:id "paredit-open-square"
+        :label "Open Square Bracket"
+        :keybindings #js [js/monaco.KeyCode.US_OPEN_SQUARE_BRACKET]
+        :run (wrap-paredit-command
+               (fn [{:keys [editor ast src selection]}]
+                 (apply-edits editor (.openList js/paredit.editor ast src (:cur selection) #js {:open "[", :close "]"}))))}
+
+   #js {:id "paredit-open-curly"
+        :label "Open Curly Brace"
+        :keybindings #js [(bit-or js/monaco.KeyMod.Shift
+                                  js/monaco.KeyCode.US_OPEN_SQUARE_BRACKET)]
+        :run (wrap-paredit-command
+               (fn [{:keys [editor ast src selection]}]
+                 (apply-edits editor (.openList js/paredit.editor ast src (:cur selection) #js {:open "{", :close "}"}))))}
+
    ;; not sure what paredit is doing here
    ;; consider paredit.editor.open() too
    #_ #js {:id "paredit-wrap-list"

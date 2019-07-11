@@ -87,16 +87,16 @@
        (.setPosition editor (.getPositionAt model nidx))))))
 
 (def actions
-  [#js {:id "paredit-slurp-forward"
-        :label "Slurp Forward"
+  [#js {:id "paredit-forward-slurp-sexp"
+        :label "Slurp S-Expression Forward"
         :keybindings #js [(bit-or js/monaco.KeyMod.WinCtrl
                                   js/monaco.KeyMod.Shift
                                   js/monaco.KeyCode.KEY_0)]
         :run (wrap-paredit-command
               (fn [{:keys [editor ast src selection]}]
                 (apply-edits editor (.slurpSexp js/paredit.editor ast src (:cur selection) #js {:backward false}))))}
-   #js {:id "paredit-slurp-backward"
-        :label "Slurp Forward"
+   #js {:id "paredit-backward-slurp-sexp"
+        :label "Slurp S-Expression Backward"
         :keybindings #js [(bit-or js/monaco.KeyMod.WinCtrl
                                   js/monaco.KeyMod.Shift
                                   js/monaco.KeyCode.KEY_9)]
@@ -104,8 +104,8 @@
               (fn [{:keys [editor ast src selection]}]
                 (apply-edits editor (.slurpSexp js/paredit.editor ast src (:cur selection) #js {:backward true}))))}
 
-   #js {:id "paredit-barf-sexp"
-        :label "Barf S-Expression"
+   #js {:id "paredit-forward-barf-sexp"
+        :label "Barf S-Expression Forward"
         :keybindings #js [(bit-or js/monaco.KeyMod.WinCtrl
                                   js/monaco.KeyMod.Shift
                                   js/monaco.KeyCode.US_CLOSE_SQUARE_BRACKET)]
@@ -113,8 +113,8 @@
               (fn [{:keys [editor ast src selection]}]
                 (apply-edits editor (.barfSexp js/paredit.editor ast src (:cur selection) #js {:backward false}))))}
 
-   #js {:id "paredit-barf-sexp-backward"
-        :label "Barf S-Expression Backwards"
+   #js {:id "paredit-backward-barf-sexp"
+        :label "Barf S-Expression Backward"
         :keybindings #js [(bit-or js/monaco.KeyMod.WinCtrl
                                   js/monaco.KeyMod.Shift
                                   js/monaco.KeyCode.US_OPEN_SQUARE_BRACKET)]
@@ -122,16 +122,16 @@
               (fn [{:keys [editor ast src selection]}]
                 (apply-edits editor (.barfSexp js/paredit.editor ast src (:cur selection) #js {:backward true}))))}
 
-   #js {:id "paredit-kill-sexp"
-        :label "Kill S-Expression"
+   #js {:id "paredit-kill"
+        :label "Kill S-Expression Forward"
         :keybindings #js [(bit-or js/monaco.KeyMod.WinCtrl
                                   js/monaco.KeyCode.KEY_K)]
         :run (wrap-paredit-command
               (fn [{:keys [editor ast src selection]}]
                 (apply-edits editor (.killSexp js/paredit.editor ast src (:cur selection) #js {:backward false}))))}
 
-   #js {:id "paredit-kill-sexp-backward"
-        :label "Kill S-Expression Backwards"
+   #js {:id "paredit-kill-backward"
+        :label "Kill S-Expression Backward"
         :keybindings #js [(bit-or js/monaco.KeyMod.WinCtrl
                                   js/monaco.KeyMod.Shift
                                   js/monaco.KeyCode.KEY_K)]
@@ -158,30 +158,26 @@
 
    #js {:id "paredit-forward"
         :label "Forward S-Expression"
-        :keybindings #js [(bit-or js/monaco.KeyMod.WinCtrl
-                                  js/monaco.KeyMod.Alt
-                                  js/monaco.KeyCode.KEY_F)]
+        :keybindings #js [(bit-or js/monaco.KeyMod.Alt
+                                  js/monaco.KeyCode.RightArrow)]
         :run (nav-thunk js/paredit.navigator.forwardSexp)}
 
    #js {:id "paredit-backward"
         :label "Backward S-Expression"
-        :keybindings #js [(bit-or js/monaco.KeyMod.WinCtrl
-                                  js/monaco.KeyMod.Alt
-                                  js/monaco.KeyCode.KEY_B)]
+        :keybindings #js [(bit-or js/monaco.KeyMod.Alt
+                                  js/monaco.KeyCode.LeftArrow)]
         :run (nav-thunk js/paredit.navigator.backwardSexp)}
 
    #js {:id "paredit-forward-down"
         :label "Forward Down S-Expression"
-        :keybindings #js [(bit-or js/monaco.KeyMod.WinCtrl
-                                  js/monaco.KeyMod.Alt
-                                  js/monaco.KeyCode.KEY_D)]
+        :keybindings #js [(bit-or js/monaco.KeyMod.Alt
+                                  js/monaco.KeyCode.DownArrow)]
         :run (nav-thunk js/paredit.navigator.forwardDownSexp)}
 
    #js {:id "paredit-backward-up"
         :label "Backward Up S-Expression"
-        :keybindings #js [(bit-or js/monaco.KeyMod.WinCtrl
-                                  js/monaco.KeyMod.Alt
-                                  js/monaco.KeyCode.KEY_U)]
+        :keybindings #js [(bit-or js/monaco.KeyMod.Alt
+                                  js/monaco.KeyCode.UpArrow)]
         :run (nav-thunk js/paredit.navigator.backwardUpSexp)}
 
    ;; not sure what paredit is doing here

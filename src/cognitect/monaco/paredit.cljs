@@ -86,6 +86,20 @@
            nidx (paredit-cmd ast (:cur selection))]
        (.setPosition editor (.getPositionAt model nidx))))))
 
+(defn- paredit-delete
+  [args]
+  (fn [{:keys [editor ast src selection]}]
+    (let [{:keys [start end]} selection
+          args (cond-> args
+                       (not= start end)
+                       (merge {:endIdx end}))
+          startIdx (if (= start end)
+                (:cur selection)
+                start)]
+      (apply-edits editor (.delete js/paredit.editor ast src
+                                   startIdx
+                                   (clj->js args))))))
+
 (def actions
   [#js {:id "paredit-forward-slurp-sexp"
         :label "Slurp S-Expression Forward"
@@ -200,6 +214,22 @@
         :run (wrap-paredit-command
                (fn [{:keys [editor ast src selection]}]
                  (apply-edits editor (.openList js/paredit.editor ast src (:cur selection) #js {:open "{", :close "}"}))))}
+
+   ;; Delete and backspace are not working as we'd desire
+   ;; Deleting "foo" deletes the whole string
+   ;; Select all, delete against our initial text fails
+   #_ #js {:id "paredit-delete"
+        :label "Delete"
+        :keybindings #js [js/monaco.KeyCode.Delete]
+        :run (wrap-paredit-command
+               (paredit-delete {}))}
+
+   #_ #js {:id "paredit-backspace"
+        :label "Backspace"
+        :keybindings #js [js/monaco.KeyCode.Backspace]
+        :run (wrap-paredit-command
+               (paredit-delete {:backward true}))}
+
 
    ;; not sure what paredit is doing here
    ;; consider paredit.editor.open() too

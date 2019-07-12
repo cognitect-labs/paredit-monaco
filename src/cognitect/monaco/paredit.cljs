@@ -90,16 +90,15 @@
   [#js {:id "paredit-forward-slurp-sexp"
         :label "Slurp S-Expression Forward"
         :keybindings #js [(bit-or js/monaco.KeyMod.WinCtrl
-                                  js/monaco.KeyMod.Shift
-                                  js/monaco.KeyCode.KEY_0)]
+                                  js/monaco.KeyCode.RightArrow)]
         :run (wrap-paredit-command
               (fn [{:keys [editor ast src selection]}]
                 (apply-edits editor (.slurpSexp js/paredit.editor ast src (:cur selection) #js {:backward false}))))}
    #js {:id "paredit-backward-slurp-sexp"
         :label "Slurp S-Expression Backward"
         :keybindings #js [(bit-or js/monaco.KeyMod.WinCtrl
-                                  js/monaco.KeyMod.Shift
-                                  js/monaco.KeyCode.KEY_9)]
+                                  js/monaco.KeyMod.Alt
+                                  js/monaco.KeyCode.LeftArrow)]
         :run (wrap-paredit-command
               (fn [{:keys [editor ast src selection]}]
                 (apply-edits editor (.slurpSexp js/paredit.editor ast src (:cur selection) #js {:backward true}))))}
@@ -107,8 +106,7 @@
    #js {:id "paredit-forward-barf-sexp"
         :label "Barf S-Expression Forward"
         :keybindings #js [(bit-or js/monaco.KeyMod.WinCtrl
-                                  js/monaco.KeyMod.Shift
-                                  js/monaco.KeyCode.US_CLOSE_SQUARE_BRACKET)]
+                                  js/monaco.KeyCode.LeftArrow)]
         :run (wrap-paredit-command
               (fn [{:keys [editor ast src selection]}]
                 (apply-edits editor (.barfSexp js/paredit.editor ast src (:cur selection) #js {:backward false}))))}
@@ -116,8 +114,8 @@
    #js {:id "paredit-backward-barf-sexp"
         :label "Barf S-Expression Backward"
         :keybindings #js [(bit-or js/monaco.KeyMod.WinCtrl
-                                  js/monaco.KeyMod.Shift
-                                  js/monaco.KeyCode.US_OPEN_SQUARE_BRACKET)]
+                                  js/monaco.KeyMod.Alt
+                                  js/monaco.KeyCode.RightArrow)]
         :run (wrap-paredit-command
               (fn [{:keys [editor ast src selection]}]
                 (apply-edits editor (.barfSexp js/paredit.editor ast src (:cur selection) #js {:backward true}))))}

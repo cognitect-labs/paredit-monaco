@@ -215,6 +215,40 @@
                (fn [{:keys [editor ast src selection]}]
                  (apply-edits editor (.openList js/paredit.editor ast src (:cur selection) #js {:open "{", :close "}"}))))}
 
+   #js {:id "forward-sexp-mark"
+        :label "Forward S-Expression mark"
+        :keybindings #js [(bit-or js/monaco.KeyMod.Alt
+                                  js/monaco.KeyMod.Shift
+                                  js/monaco.KeyCode.RightArrow)]
+        :run (wrap-paredit-command
+               (fn [{:keys [editor ast src selection] :as args}]
+                 (let [{:keys [cur end]} selection
+                       current-selection (.getSelection editor)
+                       start-position (if (= cur end)
+                                        (.getStartPosition current-selection)
+                                        (.getEndPosition current-selection))]
+                   (->> (js/paredit.navigator.forwardSexp ast cur)
+                        (.getPositionAt (.getModel editor))
+                        (js/monaco.Selection.fromPositions start-position)
+                        (.setSelection editor)))))}
+
+   #js {:id "backward-sexp-mark"
+        :label "Backward S-Expression mark"
+        :keybindings #js [(bit-or js/monaco.KeyMod.Alt
+                                  js/monaco.KeyMod.Shift
+                                  js/monaco.KeyCode.LeftArrow)]
+        :run (wrap-paredit-command
+               (fn [{:keys [editor ast src selection] :as args}]
+                 (let [{:keys [cur start]} selection
+                       current-selection (.getSelection editor)
+                       start-position (if (= cur start)
+                                        (.getEndPosition current-selection)
+                                        (.getStartPosition current-selection))]
+                   (->> (js/paredit.navigator.backwardSexp ast cur)
+                        (.getPositionAt (.getModel editor))
+                        (js/monaco.Selection.fromPositions start-position)
+                        (.setSelection editor)))))}
+
    ;; Delete and backspace are not working as we'd desire
    ;; Deleting "foo" deletes the whole string
    ;; Select all, delete against our initial text fails

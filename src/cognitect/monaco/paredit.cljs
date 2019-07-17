@@ -94,8 +94,8 @@
                        (not= start end)
                        (merge {:endIdx end}))
           startIdx (if (= start end)
-                (:cur selection)
-                start)]
+                     (:cur selection)
+                     start)]
       (apply-edits editor (.delete js/paredit.editor ast src
                                    startIdx
                                    (clj->js args))))))
@@ -249,16 +249,13 @@
                         (js/monaco.Selection.fromPositions start-position)
                         (.setSelection editor)))))}
 
-   ;; Delete and backspace are not working as we'd desire
-   ;; Deleting "foo" deletes the whole string
-   ;; Select all, delete against our initial text fails
-   #_ #js {:id "paredit-delete"
-        :label "Delete"
-        :keybindings #js [js/monaco.KeyCode.Delete]
-        :run (wrap-paredit-command
-               (paredit-delete {}))}
+    #js {:id "paredit-delete"
+         :label "Delete"
+         :keybindings #js [js/monaco.KeyCode.Delete]
+         :run (wrap-paredit-command
+                (paredit-delete {}))}
 
-   #_ #js {:id "paredit-backspace"
+   #js {:id "paredit-backspace"
         :label "Backspace"
         :keybindings #js [js/monaco.KeyCode.Backspace]
         :run (wrap-paredit-command

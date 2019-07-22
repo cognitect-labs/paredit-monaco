@@ -64,7 +64,7 @@
                         "remove" #js {:range (range i (+ i arg))
                                       :text nil}))
                     (.-changes pinfo))]
-      (.pushEditOperations model (.getSelection editor) (into-array chgs) nil)
+      (.executeEdits editor "paredit" (into-array chgs))
       (.setPosition editor (.getPositionAt model (.-newIndex pinfo))))))
 
 (defn wrap-paredit-command

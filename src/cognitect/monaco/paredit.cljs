@@ -65,7 +65,9 @@
                                       :text nil}))
                     (.-changes pinfo))]
       (.executeEdits editor "paredit" (into-array chgs))
-      (.setPosition editor (.getPositionAt model (.-newIndex pinfo))))))
+      (let [position (.getPositionAt model (.-newIndex pinfo))]
+        (.setPosition editor position)
+        (.revealPosition editor position)))))
 
 (defn wrap-paredit-command
   [cmd]
@@ -83,8 +85,10 @@
   (wrap-paredit-command
    (fn [{:keys [editor ast src selection]}]
      (let [model (.getModel editor)
-           nidx (paredit-cmd ast (:cur selection))]
-       (.setPosition editor (.getPositionAt model nidx))))))
+           nidx (paredit-cmd ast (:cur selection))
+           position (.getPositionAt model nidx)]
+       (.setPosition editor position)
+       (.revealPosition editor position)))))
 
 (defn- paredit-delete
   [args]
@@ -230,7 +234,8 @@
                    (->> (js/paredit.navigator.forwardSexp ast cur)
                         (.getPositionAt (.getModel editor))
                         (js/monaco.Selection.fromPositions start-position)
-                        (.setSelection editor)))))}
+                        (.setSelection editor))
+                   (.revealPosition editor (.getPosition editor)))))}
 
    #js {:id "backward-sexp-mark"
         :label "Backward S-Expression mark"
@@ -247,7 +252,8 @@
                    (->> (js/paredit.navigator.backwardSexp ast cur)
                         (.getPositionAt (.getModel editor))
                         (js/monaco.Selection.fromPositions start-position)
-                        (.setSelection editor)))))}
+                        (.setSelection editor))
+                   (.revealPosition editor (.getPosition editor)))))}
 
     #js {:id "paredit-delete"
          :label "Delete"
